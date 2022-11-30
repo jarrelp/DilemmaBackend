@@ -1,0 +1,3 @@
+﻿Todo:
+1. add more questions (12) and options (3 for each question)
+2. add (2) fake results
