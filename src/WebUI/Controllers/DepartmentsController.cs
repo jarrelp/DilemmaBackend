@@ -2,6 +2,7 @@
 using CleanArchitecture.Application.Departments.Queries.GetDepartmentsWithPagination;
 using CleanArchitecture.Application.Departments.Commands.CreateDepartment;
 using CleanArchitecture.Application.Departments.Commands.DeleteDepartment;
+using CleanArchitecture.Application.Departments.Commands.DeleteDepartments;
 using CleanArchitecture.Application.Departments.Commands.UpdateDepartment;
 using CleanArchitecture.Application.Departments.Commands.PurgeDepartments;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,7 @@ namespace CleanArchitecture.API.Controllers;
 public class DepartmentsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<DepartmentDto>>> GetDepartmentsWithPagination([FromQuery] GetDepartmentsWithPaginationQuery query)
+    public async Task<ActionResult<List<DepartmentDto>>> GetDepartmentsWithPagination([FromQuery] GetDepartmentQuery query)
     {
         return await Mediator.Send(query);
     }
@@ -41,6 +42,18 @@ public class DepartmentsController : ApiControllerBase
     public async Task<ActionResult> Delete(int id)
     {
         await Mediator.Send(new DeleteDepartmentCommand(id));
+
+        return NoContent();
+    }
+
+    [HttpDelete("multiple")]
+    public async Task<ActionResult<int[]>> Delete(DeleteDepartmentsCommand command)
+    {
+        if (command.Ids.Length == 0)
+        {
+            return BadRequest();
+        }
+        await Mediator.Send(command);
 
         return NoContent();
     }
