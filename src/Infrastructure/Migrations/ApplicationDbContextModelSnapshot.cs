@@ -631,7 +631,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("CleanArchitecture.Domain.Entities.Result", null)
-                        .WithMany("Options")
+                        .WithMany("Answers")
                         .HasForeignKey("ResultId");
 
                     b.Navigation("Question");
@@ -759,7 +759,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Result", b =>
                 {
-                    b.Navigation("Options");
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Skill", b =>

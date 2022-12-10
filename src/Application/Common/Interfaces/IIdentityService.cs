@@ -20,4 +20,8 @@ public interface IIdentityService
     Task<ApplicationUser> GetUserAsync(string userId);
 
     Task<List<ApplicationUser>> GetAllUsersAsync();
+
+    Task<(Models.Result Result, string UserId)> EditUserAsync(string id, string userName, string password, int departmentId);
+
+    Task<(Models.Result Result, string UserId)> DeleteUserDepartmentAsync(string userId);
 }

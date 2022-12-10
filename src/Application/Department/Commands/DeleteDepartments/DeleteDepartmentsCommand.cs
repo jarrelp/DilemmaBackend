@@ -32,7 +32,7 @@ public class DeleteDepartmentsCommandHandler : IRequestHandler<DeleteDepartments
                 throw new NotFoundException(nameof(Department), item);
             }
 
-            _context.Departments.Remove(entity);
+            _context.Departments.RemoveRange(entity);
 
             entity.AddDomainEvent(new DepartmentDeletedEvent(entity));
         }

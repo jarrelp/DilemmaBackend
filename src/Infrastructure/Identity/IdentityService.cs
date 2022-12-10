@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
+﻿using Azure.Core;
+using CleanArchitecture.Application.Common.Exceptions;
+using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -108,5 +110,42 @@ public class IdentityService : IIdentityService
         var result = await _userManager.DeleteAsync(user);
 
         return result.ToApplicationResult();
+    }
+
+    public async Task<(Application.Common.Models.Result Result, string UserId)> EditUserAsync(string id, string userName, string password, int departmentId)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            throw new NotFoundException(nameof(ApplicationUser), id);
+        }
+        else
+        {
+            user.Id = id;
+            user.UserName = userName;
+            user.Email = userName;
+            user.DepartmentId = departmentId;
+        }
+
+        var result = await _userManager.UpdateAsync(user);
+
+        return (result.ToApplicationResult(), user.Id);
+    }
+
+    public async Task<(Application.Common.Models.Result Result, string UserId)> DeleteUserDepartmentAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            throw new NotFoundException(nameof(ApplicationUser), userId);
+        }
+        else
+        {
+            user.Department = null;
+        }
+
+        var result = await _userManager.UpdateAsync(user);
+
+        return (result.ToApplicationResult(), user.Id);
     }
 }

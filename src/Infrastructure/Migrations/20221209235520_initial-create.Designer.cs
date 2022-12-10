@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CleanArchitecture.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221121182646_Initial-Create")]
-    partial class InitialCreate
+    [Migration("20221209235520_initial-create")]
+    partial class initialcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -634,7 +634,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("CleanArchitecture.Domain.Entities.Result", null)
-                        .WithMany("Options")
+                        .WithMany("Answers")
                         .HasForeignKey("ResultId");
 
                     b.Navigation("Question");
@@ -762,7 +762,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Result", b =>
                 {
-                    b.Navigation("Options");
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Skill", b =>

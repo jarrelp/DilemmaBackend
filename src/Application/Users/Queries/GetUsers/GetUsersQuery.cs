@@ -5,24 +5,18 @@ using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitecture.Application.Users.Queries.GetUsersWithPagination;
+namespace CleanArchitecture.Application.Users.Queries.GetUsers;
 
-public record GetUsersWithPaginationQuery : IRequest<PaginatedList<ApplicationUserDto>>
-{
-    public string? UserId { get; init; }
-    public string? UserName { get; init; }
-    public int? DepartmentId { get; init; }
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
-}
+public record GetUsersQuery : IRequest<List<ApplicationUser>>;
 
-public class GetUsersWithPaginationQueryHandler : IRequestHandler<GetUsersWithPaginationQuery, PaginatedList<ApplicationUserDto>>
+public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<ApplicationUser>>
 {
     private readonly IIdentityService _identityService;
     private readonly IMapper _mapper;
 
-    public GetUsersWithPaginationQueryHandler(
+    public GetUsersQueryHandler(
         IIdentityService identityService,
         IMapper mapper
         )
@@ -31,11 +25,22 @@ public class GetUsersWithPaginationQueryHandler : IRequestHandler<GetUsersWithPa
         _mapper = mapper;
     }
 
-    public async Task<PaginatedList<ApplicationUserDto>> Handle(GetUsersWithPaginationQuery request, CancellationToken cancellationToken)
+    public async Task<List<ApplicationUser>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        var ret = new PaginatedList<ApplicationUserDto>();
-        var results = _identityService.GetAllUsersAsync().Result.ToList();
-        ret.Items.AddRange((IEnumerable<ApplicationUserDto>)results);
+        /*var ret = new List<ApplicationUserDto>();
+        var result = _identityService.GetAllUsersAsync().Result;
+        if (result.Any())
+        {
+            ret.AddRange((IEnumerable<ApplicationUserDto>)result);
+        }
+        return await ret.AsQueryable()
+            *//*.OrderBy(x => x.UserName)*//*
+            .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();*/
+
+        return await _identityService.GetAllUsersAsync();
+
+
 
         /*if (request.UserId == null && request.UserName == null && request.DepartmentId == null)
         {
@@ -100,7 +105,5 @@ public class GetUsersWithPaginationQueryHandler : IRequestHandler<GetUsersWithPa
             .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageNumber, request.PageSize);
         }*/
-
-        return await Task.FromResult(ret);
     }
 }
