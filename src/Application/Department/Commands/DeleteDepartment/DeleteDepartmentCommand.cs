@@ -32,14 +32,19 @@ public class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepartmentCo
             throw new NotFoundException(nameof(Department), request.Id);
         }
 
-        var allUsers = await _identityService.GetAllUsersAsync();
+        foreach(var item in entity.ApplicationUsers)
+        {
+            await _identityService.DeleteUserDepartmentAsync(item.Id);
+        }
+
+        /*var allUsers = await _identityService.GetAllUsersAsync();
         foreach (var item in allUsers)
         {
             if(item.DepartmentId == entity.Id)
             {
                 await _identityService.DeleteUserDepartmentAsync(item.Id);
             }
-        }
+        }*/
 
         _context.Departments.Remove(entity);
 

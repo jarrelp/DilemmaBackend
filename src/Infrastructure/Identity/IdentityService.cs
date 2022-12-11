@@ -1,8 +1,11 @@
-﻿using Azure.Core;
+﻿using System.Threading;
+using Azure.Core;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
+using IdentityModel;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +17,18 @@ public class IdentityService : IIdentityService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IApplicationDbContext _context;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        IApplicationDbContext context)
     {
         _userManager = userManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
+        _context = context;
     }
 
     public async Task<string> GetUserNameAsync(string userId)
@@ -67,8 +73,19 @@ public class IdentityService : IIdentityService
         {
             UserName = userName,
             Email = userName,
-            DepartmentId = departmentId
         };
+
+        var entity = await _context.Departments
+            .FindAsync(new object[] { departmentId });
+
+        if (entity == null)
+        {
+            throw new NotFoundException(nameof(Department), departmentId);
+        }
+        else
+        {
+            user.Department = entity;
+        }
 
         var result = await _userManager.CreateAsync(user, password);
 

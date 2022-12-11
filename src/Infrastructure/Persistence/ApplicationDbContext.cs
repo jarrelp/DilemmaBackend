@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CleanArchitecture.Infrastructure.Persistence;
 
@@ -46,8 +47,40 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        //one to many
+        builder.Entity<Department>()
+            .HasMany(c => c.ApplicationUsers)
+            .WithOne(e => e.Department)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        //one to many
+        builder.Entity<Quiz>()
+            .HasMany(c => c.Results)
+            .WithOne(e => e.Quiz)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Quiz>()
+            .HasMany(c => c.Questions)
+            .WithOne(c => c.Quiz)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Question>()
+            .HasMany(c => c.Options)
+            .WithOne(c => c.Question)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Option>()
+            .HasMany(c => c.OptionSkills)
+            .WithOne(c => c.Option)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Skill>()
+            .HasMany(c => c.OptionSkills)
+            .WithOne(c => c.Skill)
+            .OnDelete(DeleteBehavior.Cascade);
+
         //many to many
-        /*builder.Entity<OptionSkill>().HasKey(os => new { os.OptionId, os.SkillId });
+        builder.Entity<OptionSkill>().HasKey(os => new { os.OptionId, os.SkillId });
 
         builder.Entity<OptionSkill>()
                     .HasOne(t => t.Option)
@@ -57,9 +90,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         builder.Entity<OptionSkill>()
                     .HasOne(t => t.Skill)
                     .WithMany(t => t.OptionSkills)
-                    .HasForeignKey(t => t.SkillId);*/
-
-        base.OnModelCreating(builder);
+                    .HasForeignKey(t => t.SkillId);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

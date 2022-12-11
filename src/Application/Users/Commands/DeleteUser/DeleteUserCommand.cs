@@ -31,20 +31,19 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
             throw new NotFoundException(nameof(ApplicationUser), request.Id);
         }
 
-        var result = await _identityService.DeleteUserAsync(request.Id);
-
-        if (result.Succeeded)
+        var quizResults = await _identityService.GetUserResults(request.Id);
+        if (quizResults.Count > 0)
         {
-            var quizResults = await _identityService.GetUserResults(request.Id);
-            if (quizResults.Count > 0)
-            {
-                _context.Results.RemoveRange(quizResults);
-            }
+            _context.Results.RemoveRange(quizResults);
         }
 
-        entity.AddDomainEvent(new UserDeletedEvent(entity));
+        var result = await _identityService.DeleteUserAsync(request.Id);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        if(result.Succeeded)
+        {
+            entity.AddDomainEvent(new UserDeletedEvent(entity));
+            await _context.SaveChangesAsync(cancellationToken);
+        }
 
         return Unit.Value;
     }

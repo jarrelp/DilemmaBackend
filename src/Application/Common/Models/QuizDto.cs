@@ -8,6 +8,7 @@ public class QuizDto : IMapFrom<Quiz>
     public QuizDto()
     {
         Questions = new List<QuestionDto>();
+        Results = new List<ResultDto>();
     }
 
     public int Id { get; set; }
@@ -17,4 +18,6 @@ public class QuizDto : IMapFrom<Quiz>
     public bool Active { get; set; }
 
     public IList<QuestionDto> Questions { get; set; }
+
+    public IList<ResultDto> Results { get; set; }
 }

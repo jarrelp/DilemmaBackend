@@ -12,7 +12,7 @@ namespace CleanArchitecture.API.Controllers;
 public class UsersController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<ApplicationUser>>> GetUsers([FromQuery] GetUsersQuery query)
+    public async Task<ActionResult<List<ApplicationUserDto>>> GetUsers([FromQuery] GetUsersQuery query)
     {
         return await Mediator.Send(query);
     }

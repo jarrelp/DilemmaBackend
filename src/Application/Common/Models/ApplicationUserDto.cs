@@ -10,9 +10,9 @@ public class ApplicationUserDto : IMapFrom<ApplicationUser>
         Results = new List<ResultDto>();
     }
 
-    /*public string Id { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
-    public string UserName { get; set; } = null!;*/
+    public string UserName { get; set; } = null!;
 
     public int DepartmentId { get; set; }
 

@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Users.Queries.GetUsers;
 
-public record GetUsersQuery : IRequest<List<ApplicationUser>>;
+public record GetUsersQuery : IRequest<List<ApplicationUserDto>>;
 
-public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<ApplicationUser>>
+public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<ApplicationUserDto>>
 {
     private readonly IIdentityService _identityService;
     private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<Applicat
         _mapper = mapper;
     }
 
-    public async Task<List<ApplicationUser>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+    public async Task<List<ApplicationUserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         /*var ret = new List<ApplicationUserDto>();
         var result = _identityService.GetAllUsersAsync().Result;
@@ -38,9 +38,11 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<Applicat
             .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
             .ToListAsync();*/
 
-        return await _identityService.GetAllUsersAsync();
 
-
+        var ret = await _identityService.GetAllUsersAsync();
+        var ret2 = ret.ToList().AsQueryable();
+        return ret2
+            .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToList();
 
         /*if (request.UserId == null && request.UserName == null && request.DepartmentId == null)
         {

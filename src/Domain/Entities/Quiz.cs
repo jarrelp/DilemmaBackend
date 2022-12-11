@@ -7,4 +7,6 @@ public class Quiz : BaseAuditableEntity
     public bool Active { get; set; } = false;
 
     public IList<Question> Questions { get; set; } = new List<Question>();
+
+    public IList<Result> Results { get; set; } = new List<Result>();
 }
