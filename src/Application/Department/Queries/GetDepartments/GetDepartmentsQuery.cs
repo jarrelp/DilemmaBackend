@@ -6,7 +6,7 @@ using CleanArchitecture.Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitecture.Application.Departments.Queries.GetDepartmentsWithPagination;
+namespace CleanArchitecture.Application.Departments.Queries.GetDepartments;
 
 public record GetDepartmentQuery : IRequest<List<DepartmentDto>>;
 

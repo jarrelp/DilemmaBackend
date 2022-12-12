@@ -2,7 +2,8 @@
 using CleanArchitecture.Application.Results.Commands.CreateResult;
 using CleanArchitecture.Application.Results.Commands.DeleteResult;
 using CleanArchitecture.Application.Results.Commands.PurgeResults;
-using CleanArchitecture.Application.Results.Queries.GetResultsWithPagination;
+using CleanArchitecture.Application.Results.Queries.GetResults;
+using CleanArchitecture.Application.Results.Queries.GetResultsByDepartment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,13 @@ namespace CleanArchitecture.API.Controllers;
 public class ResultsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<ResultDto>>> GetResultsWithPagination([FromQuery] GetResultsWithPaginationQuery query)
+    public async Task<ActionResult<List<ResultDto>>> GetResults([FromQuery] GetResultsQuery query)
+    {
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("department")]
+    public async Task<ActionResult<List<ResultDto>>> GetResultsByDepartment([FromQuery] GetResultsByDepartmentQuery query)
     {
         return await Mediator.Send(query);
     }

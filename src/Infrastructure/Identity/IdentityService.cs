@@ -185,4 +185,12 @@ public class IdentityService : IIdentityService
 
         return (result.ToApplicationResult(), user.Id);
     }
+
+    public async Task<(Application.Common.Models.Result Result, string UserId)> AddUserResultAsync(ApplicationUser user, Domain.Entities.Result resultModel)
+    {
+        user.Results.Add(resultModel);
+        var result = await _userManager.UpdateAsync(user);
+
+        return (result.ToApplicationResult(), user.Id);
+    }
 }

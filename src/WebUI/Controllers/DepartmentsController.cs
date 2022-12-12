@@ -1,5 +1,5 @@
 ﻿using CleanArchitecture.Application.Common.Models;
-using CleanArchitecture.Application.Departments.Queries.GetDepartmentsWithPagination;
+using CleanArchitecture.Application.Departments.Queries.GetDepartments;
 using CleanArchitecture.Application.Departments.Commands.CreateDepartment;
 using CleanArchitecture.Application.Departments.Commands.DeleteDepartment;
 using CleanArchitecture.Application.Departments.Commands.DeleteDepartments;

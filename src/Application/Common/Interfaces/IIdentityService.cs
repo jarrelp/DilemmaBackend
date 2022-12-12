@@ -26,4 +26,6 @@ public interface IIdentityService
     Task<(Models.Result Result, string UserId)> EditUserAsync(string id, string userName, string password, int departmentId);
 
     Task<(Models.Result Result, string UserId)> DeleteUserDepartmentAsync(string userId);
+
+    Task<(Models.Result Result, string UserId)> AddUserResultAsync(ApplicationUser user, Domain.Entities.Result resultModel);
 }
