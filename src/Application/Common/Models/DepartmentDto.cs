@@ -9,5 +9,5 @@ public class DepartmentDto : IMapFrom<Department>
 
     public string Name { get; set; } = null!;
 
-    public IList<ApplicationUser> ApplicationUsers { get; set; } = new List<ApplicationUser>();
+    public IList<ApplicationUserDto> ApplicationUsers { get; set; } = new List<ApplicationUserDto>();
 }

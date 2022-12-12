@@ -86,13 +86,15 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
                     .HasOne(t => t.Option)
                     .WithMany(t => t.OptionSkills)
                     .HasForeignKey(t => t.OptionId)
-                    .OnDelete(DeleteBehavior.Cascade); ;
+                    .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<OptionSkill>()
                     .HasOne(t => t.Skill)
                     .WithMany(t => t.OptionSkills)
                     .HasForeignKey(t => t.SkillId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+        base.OnModelCreating(builder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

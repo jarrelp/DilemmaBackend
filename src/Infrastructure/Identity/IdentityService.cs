@@ -55,6 +55,25 @@ public class IdentityService : IIdentityService
         return ret;
     }
 
+    public async Task<List<ApplicationUser>> GetAllUsersByDepartmentAsync(int departmentId)
+    {
+        var users = await GetAllUsersAsync();
+
+        List<ApplicationUser> ret = new List<ApplicationUser>();
+        if (users.Any())
+        {
+            foreach(var item in users)
+            {
+                if(item.DepartmentId == departmentId)
+                {
+                    ret.Add(item);
+                }
+            }
+        }
+
+        return ret;
+    }
+
     public async Task<List<Domain.Entities.Result>> GetUserResults(string userId)
     {
         var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
@@ -140,9 +159,10 @@ public class IdentityService : IIdentityService
         {
             user.Id = id;
             user.UserName = userName;
-            user.Email = userName;
             user.DepartmentId = departmentId;
         }
+
+        user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, password);
 
         var result = await _userManager.UpdateAsync(user);
 

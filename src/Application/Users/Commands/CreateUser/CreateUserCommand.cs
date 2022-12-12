@@ -9,7 +9,6 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser;
 public record CreateUserCommand : IRequest<string>
 {
     public string UserName { get; init; } = null!;
-    public string Email { get; init; } = null!;
     public string Password { get; init; } = null!;
     public int DepartmentId { get; init; }
 }
@@ -27,8 +26,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, strin
 
     public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.DepartmentId);
-
         var departmentEntity = await _context.Departments
             .FindAsync(new object[] { request.DepartmentId }, cancellationToken);
 
@@ -36,6 +33,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, strin
         {
             throw new NotFoundException(nameof(Department), request.DepartmentId);
         }
+
+        var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.DepartmentId);
 
         var entity = await _identityService.GetUserAsync(result.UserId);
 

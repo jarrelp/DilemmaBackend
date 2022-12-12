@@ -21,6 +21,8 @@ public interface IIdentityService
 
     Task<List<ApplicationUser>> GetAllUsersAsync();
 
+    Task<List<ApplicationUser>> GetAllUsersByDepartmentAsync(int departmentId);
+
     Task<(Models.Result Result, string UserId)> EditUserAsync(string id, string userName, string password, int departmentId);
 
     Task<(Models.Result Result, string UserId)> DeleteUserDepartmentAsync(string userId);
