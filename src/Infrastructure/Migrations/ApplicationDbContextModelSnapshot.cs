@@ -150,25 +150,28 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ResultId")
+                    b.Property<string>("ResultApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ResultQuizId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
 
-                    b.HasIndex("ResultId");
+                    b.HasIndex("ResultApplicationUserId", "ResultQuizId");
 
                     b.ToTable("Options");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.OptionSkill", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("OptionId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -182,18 +185,10 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OptionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SkillId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SkillLevel")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("OptionId");
+                    b.HasKey("OptionId", "SkillId");
 
                     b.HasIndex("SkillId");
 
@@ -269,15 +264,11 @@ namespace CleanArchitecture.Infrastructure.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Result", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("QuizId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -291,12 +282,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuizId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
+                    b.HasKey("ApplicationUserId", "QuizId");
 
                     b.HasIndex("QuizId");
 
@@ -614,7 +600,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.ApplicationUser", b =>
                 {
                     b.HasOne("CleanArchitecture.Domain.Entities.Department", "Department")
-                        .WithMany()
+                        .WithMany("ApplicationUsers")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -630,11 +616,13 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CleanArchitecture.Domain.Entities.Result", null)
+                    b.HasOne("CleanArchitecture.Domain.Entities.Result", "Result")
                         .WithMany("Answers")
-                        .HasForeignKey("ResultId");
+                        .HasForeignKey("ResultApplicationUserId", "ResultQuizId");
 
                     b.Navigation("Question");
+
+                    b.Navigation("Result");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.OptionSkill", b =>
@@ -676,7 +664,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("CleanArchitecture.Domain.Entities.Quiz", "Quiz")
-                        .WithMany()
+                        .WithMany("Results")
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -742,6 +730,11 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.Navigation("Results");
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Department", b =>
+                {
+                    b.Navigation("ApplicationUsers");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Option", b =>
                 {
                     b.Navigation("OptionSkills");
@@ -755,6 +748,8 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Quiz", b =>
                 {
                     b.Navigation("Questions");
+
+                    b.Navigation("Results");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Result", b =>

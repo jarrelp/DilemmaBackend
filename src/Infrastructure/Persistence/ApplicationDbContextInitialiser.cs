@@ -123,29 +123,27 @@ public class ApplicationDbContextInitialiser
                 SkillLevel = SkillLevel.Medium
             };
 
-            /*//option
-            var o1 = new Option { Description = "option 1: 📃", OptionSkills = new List<OptionSkill>(){ os1, os2 } };
+            //option
+            var o1 = new Option { Description = "option 1: 📃", OptionSkills = new List<OptionSkill>() { os1, os2 } };
             var o2 = new Option { Description = "option 2: ✅", OptionSkills = new List<OptionSkill>() { os3, os4 } };
             var o3 = new Option { Description = "option 3: 🤯", OptionSkills = new List<OptionSkill>() { os5, os6 } };
-            var options = new List<Option>() { o1, o2, o3};
+            var options = new List<Option>() { o1, o2, o3 };
 
-            _context.Options.AddRange(o1, o2, o3);*/
+            _context.Options.AddRange(o1, o2, o3);
 
             //question
-            var question1 = new Question { Description = "Question", 
-                /*Options = options*/
-            };
+            var question1 = new Question { Description = "Question", Options = options };
             _context.Questions.Add(question1);
 
             //quiz
             var quiz1 = new Quiz { Description = "Question", Active = true, Questions = new List<Question>() { question1 } };
             _context.Quizzes.Add(quiz1);
 
-            /*//result
-            var result1 = new Result { Answers = new List<Option>() { o1 }, Quiz = quiz1 };
-            *//*_context.Results.Add(result1);*//*
+            //result
+            var result1 = new Result { Answers = new List<Option>() { o1 }, Quiz = quiz1, ApplicationUser = administrator, ApplicationUserId = administrator.Id };
+            _context.Results.Add(result1);
 
-            administrator.Results.Add(result1);
+            /*administrator.Results.Add(result1);
 
             await _userManager.UpdateAsync(administrator);*/
 

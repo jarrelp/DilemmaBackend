@@ -15,14 +15,16 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<Applicat
 {
     private readonly IIdentityService _identityService;
     private readonly IMapper _mapper;
+    private readonly IApplicationDbContext _context;
 
     public GetUsersQueryHandler(
         IIdentityService identityService,
-        IMapper mapper
-        )
+        IMapper mapper,
+        IApplicationDbContext context)
     {
         _identityService = identityService;
         _mapper = mapper;
+        _context = context;
     }
 
     public async Task<List<ApplicationUserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
@@ -38,9 +40,12 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<Applicat
             .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
             .ToListAsync();*/
 
-
         var ret = await _identityService.GetAllUsersAsync();
         var ret2 = ret.ToList().AsQueryable();
+        /*foreach(var item in ret2)
+        {
+            
+        }*/
         return ret2
             .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToList();
 

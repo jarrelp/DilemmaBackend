@@ -52,7 +52,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         builder.Entity<Department>()
             .HasMany(c => c.ApplicationUsers)
             .WithOne(e => e.Department)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Cascade);
 
         /*builder.Entity<Quiz>()
             .HasMany(c => c.Questions)
@@ -105,9 +105,9 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder
+        /*optionsBuilder
         .LogTo(Console.WriteLine, new[] { InMemoryEventId.ChangesSaved })
-        .UseInMemoryDatabase("UserContextWithNullCheckingDisabled", b => b.EnableNullChecks(false));
+        .UseInMemoryDatabase("UserContextWithNullCheckingDisabled", b => b.EnableNullChecks(false));*/
         optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
     }
 

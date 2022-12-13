@@ -9,8 +9,6 @@ public class ResultDto : IMapFrom<Domain.Entities.Result>
         Answers = new List<OptionDto>();
     }
 
-    public int Id { get; set; }
-
     public int QuizId { get; set; }
 
     public string ApplicationUserId { get; set; } = null!;

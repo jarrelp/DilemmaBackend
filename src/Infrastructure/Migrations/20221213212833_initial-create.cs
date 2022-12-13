@@ -300,8 +300,6 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "Results",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     QuizId = table.Column<int>(type: "int", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -311,7 +309,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Results", x => x.Id);
+                    table.PrimaryKey("PK_Results", x => new { x.ApplicationUserId, x.QuizId });
                     table.ForeignKey(
                         name: "FK_Results_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
@@ -334,7 +332,8 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
-                    ResultId = table.Column<int>(type: "int", nullable: true),
+                    ResultApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ResultQuizId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -350,21 +349,19 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Options_Results_ResultId",
-                        column: x => x.ResultId,
+                        name: "FK_Options_Results_ResultApplicationUserId_ResultQuizId",
+                        columns: x => new { x.ResultApplicationUserId, x.ResultQuizId },
                         principalTable: "Results",
-                        principalColumn: "Id");
+                        principalColumns: new[] { "ApplicationUserId", "QuizId" });
                 });
 
             migrationBuilder.CreateTable(
                 name: "OptionSkills",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SkillLevel = table.Column<int>(type: "int", nullable: false),
                     SkillId = table.Column<int>(type: "int", nullable: false),
                     OptionId = table.Column<int>(type: "int", nullable: false),
+                    SkillLevel = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -372,7 +369,7 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OptionSkills", x => x.Id);
+                    table.PrimaryKey("PK_OptionSkills", x => new { x.OptionId, x.SkillId });
                     table.ForeignKey(
                         name: "FK_OptionSkills_Options_OptionId",
                         column: x => x.OptionId,
@@ -453,14 +450,9 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Options_ResultId",
+                name: "IX_Options_ResultApplicationUserId_ResultQuizId",
                 table: "Options",
-                column: "ResultId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OptionSkills_OptionId",
-                table: "OptionSkills",
-                column: "OptionId");
+                columns: new[] { "ResultApplicationUserId", "ResultQuizId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OptionSkills_SkillId",
@@ -491,11 +483,6 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 name: "IX_Questions_QuizId",
                 table: "Questions",
                 column: "QuizId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Results_ApplicationUserId",
-                table: "Results",
-                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Results_QuizId",

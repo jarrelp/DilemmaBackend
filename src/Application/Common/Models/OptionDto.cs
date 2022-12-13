@@ -17,7 +17,5 @@ public class OptionDto : IMapFrom<Option>
 
     public int QuestionId { get; set; }
 
-    public int ResultId { get; set; }
-
     public IList<OptionSkillDto> OptionSkills { get; set; }
 }

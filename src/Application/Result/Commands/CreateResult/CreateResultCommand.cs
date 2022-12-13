@@ -70,6 +70,6 @@ public class CreateResultCommandHandler : IRequestHandler<CreateResultCommand, i
 
         await _context.SaveChangesAsync(cancellationToken);*/
 
-        return entity.Id;
+        return entity.QuizId;
     }
 }

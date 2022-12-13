@@ -24,7 +24,6 @@ public class GetResultsWithPaginationQueryHandler : IRequestHandler<GetResultsQu
     public async Task<List<ResultDto>> Handle(GetResultsQuery request, CancellationToken cancellationToken)
     {
         return await _context.Results
-            .OrderBy(x => x.Id)
             .ProjectTo<ResultDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }

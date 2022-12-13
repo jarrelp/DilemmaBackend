@@ -6,8 +6,6 @@ namespace CleanArchitecture.Application.Common.Models;
 
 public class OptionSkillDto : IMapFrom<OptionSkill>
 {
-    public int Id { get; set; }
-
     public int OptionId { get; set; }
 
     public string Description { get; set; } = null!;

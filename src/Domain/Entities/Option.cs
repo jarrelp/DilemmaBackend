@@ -2,13 +2,14 @@
 
 public class Option : BaseAuditableEntity
 {
+    public int Id { get; set; }
+
     public string Description { get; set; } = null!;
 
     public int QuestionId { get; set; }
     public Question Question { get; set; } = null!;
 
-    public int ResultId { get; set; }
-    public Result? Result { get; set; }
+    public Result? Result { get; set; } = null;
 
     public IList<OptionSkill> OptionSkills { get; set; } = new List<OptionSkill>();
 }
