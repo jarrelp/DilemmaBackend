@@ -94,6 +94,14 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
                     .HasForeignKey(t => t.SkillId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Entity<ApplicationUser>()
+            .HasMany(c => c.Results)
+            .WithOne(c => c.ApplicationUser)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Result>()
+            .HasMany(c => c.Answers);
+
         base.OnModelCreating(builder);
     }
 
