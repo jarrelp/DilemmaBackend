@@ -8,6 +8,7 @@ using Duende.IdentityServer.EntityFramework.Options;
 using MediatR;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -53,13 +54,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             .WithOne(e => e.Department)
             .OnDelete(DeleteBehavior.SetNull);
 
-        //one to many
-        builder.Entity<Quiz>()
-            .HasMany(c => c.Results)
-            .WithOne(e => e.Quiz)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<Quiz>()
+        /*builder.Entity<Quiz>()
             .HasMany(c => c.Questions)
             .WithOne(c => c.Quiz)
             .OnDelete(DeleteBehavior.Cascade);
@@ -67,17 +62,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         builder.Entity<Question>()
             .HasMany(c => c.Options)
             .WithOne(c => c.Question)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<Option>()
-            .HasMany(c => c.OptionSkills)
-            .WithOne(c => c.Option)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<Skill>()
-            .HasMany(c => c.OptionSkills)
-            .WithOne(c => c.Skill)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade);*/
 
         //many to many
         builder.Entity<OptionSkill>().HasKey(os => new { os.OptionId, os.SkillId });
@@ -94,19 +79,35 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
                     .HasForeignKey(t => t.SkillId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<ApplicationUser>()
-            .HasMany(c => c.Results)
-            .WithOne(c => c.ApplicationUser)
-            .OnDelete(DeleteBehavior.Cascade);
+        //many to many
+        builder.Entity<Result>().HasKey(os => new { os.ApplicationUserId, os.QuizId });
 
         builder.Entity<Result>()
-            .HasMany(c => c.Answers);
+                    .HasOne(t => t.ApplicationUser)
+                    .WithMany(t => t.Results)
+                    .HasForeignKey(t => t.ApplicationUserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Result>()
+                    .HasOne(t => t.Quiz)
+                    .WithMany(t => t.Results)
+                    .HasForeignKey(t => t.QuizId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        /*// one to many
+        builder.Entity<Result>()
+            .HasMany(c => c.Answers)
+            .WithOne(c => c.Result)
+            .OnDelete(DeleteBehavior.Cascade);*/
 
         base.OnModelCreating(builder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        optionsBuilder
+        .LogTo(Console.WriteLine, new[] { InMemoryEventId.ChangesSaved })
+        .UseInMemoryDatabase("UserContextWithNullCheckingDisabled", b => b.EnableNullChecks(false));
         optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
     }
 
