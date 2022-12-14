@@ -69,7 +69,7 @@ public class ApplicationDbContextInitialiser
         }
 
         // Default users
-        var administrator = new ApplicationUser { UserName = "admin@localhost", Email = "admin@localhost" };
+        var administrator = new ApplicationUser { UserName = "admin@localhost", Email = "admin@localhost", Department = d1 };
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
@@ -143,10 +143,9 @@ public class ApplicationDbContextInitialiser
             var result1 = new Result { Answers = new List<Option>() { o1 }, Quiz = quiz1, ApplicationUser = administrator, ApplicationUserId = administrator.Id };
             _context.Results.Add(result1);
 
-            /*administrator.Results.Add(result1);*/
+            /*administrator.Results.Add(result1);
 
-            administrator.Department = d1;
-            await _userManager.UpdateAsync(administrator);
+            await _userManager.UpdateAsync(administrator);*/
 
             await _context.SaveChangesAsync();
         }

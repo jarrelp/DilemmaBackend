@@ -9,7 +9,7 @@ public class Option : BaseAuditableEntity
     public int QuestionId { get; set; }
     public Question Question { get; set; } = null!;
 
-    public Result? Result { get; set; } = null;
+    public Result? Result { get; set; }
 
     public IList<OptionSkill> OptionSkills { get; set; } = new List<OptionSkill>();
 }
