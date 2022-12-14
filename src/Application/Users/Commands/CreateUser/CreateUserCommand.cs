@@ -40,10 +40,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, strin
 
         entity.AddDomainEvent(new UserCreatedEvent(entity));
 
-        departmentEntity.ApplicationUsers.Add(entity);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
         return result.UserId;
     }
 }

@@ -40,14 +40,14 @@ public class IdentityService : IIdentityService
 
     public async Task<ApplicationUser> GetUserAsync(string userId)
     {
-        var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+        var user = await _userManager.Users.Include(x => x.Results).Include(x => x.Department).FirstAsync(u => u.Id == userId);
 
         return user;
     }
 
     public async Task<List<ApplicationUser>> GetAllUsersAsync()
     {
-        var users = await _userManager.Users.ToListAsync();
+        var users = await _userManager.Users.Include(x => x.Results).Include(x => x.Department).ToListAsync();
 
         List<ApplicationUser> ret = new List<ApplicationUser>();
         ret.AddRange(users);
