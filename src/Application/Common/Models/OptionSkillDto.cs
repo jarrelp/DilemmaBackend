@@ -7,11 +7,13 @@ namespace CleanArchitecture.Application.Common.Models;
 public class OptionSkillDto : IMapFrom<OptionSkill>
 {
     public int OptionId { get; set; }
+    public OptionDto Option { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 
     public int SkillLevel { get; set; }
 
+    public int SkillId { get; set; }
     public SkillDto Skill { get; set; } = null!;
 
     public void Mapping(Profile profile)

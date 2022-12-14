@@ -13,6 +13,7 @@ public class QuestionDto : IMapFrom<Question>
     public int Id { get; set; }
 
     public int QuizId { get; set; }
+    public QuizDto QuizDto { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 

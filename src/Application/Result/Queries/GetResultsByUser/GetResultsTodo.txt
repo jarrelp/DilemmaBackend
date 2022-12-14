@@ -1,0 +1,4 @@
+﻿Todo:
+1. gebruiker kan zijn/haar resultaten inzien
+2. gebruiker kan resultaat van afdeling inzien
+3. admin kan resultaten van alle afdelingen inzien

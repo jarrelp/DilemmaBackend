@@ -4,6 +4,7 @@ using CleanArchitecture.Application.Results.Commands.DeleteResult;
 using CleanArchitecture.Application.Results.Commands.PurgeResults;
 using CleanArchitecture.Application.Results.Queries.GetResults;
 using CleanArchitecture.Application.Results.Queries.GetResultsByDepartment;
+using CleanArchitecture.Application.Results.Queries.GetResultsByUser;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,12 @@ public class ResultsController : ApiControllerBase
 
     [HttpGet("department")]
     public async Task<ActionResult<List<ResultDto>>> GetResultsByDepartment([FromQuery] GetResultsByDepartmentQuery query)
+    {
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("user")]
+    public async Task<ActionResult<List<ResultDto>>> GetResultsByUser([FromQuery] GetResultsByUserQuery query)
     {
         return await Mediator.Send(query);
     }

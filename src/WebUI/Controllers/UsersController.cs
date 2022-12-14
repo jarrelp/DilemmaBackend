@@ -18,6 +18,7 @@ public class UsersController : ApiControllerBase
     {
         return await Mediator.Send(query);
     }
+
     [HttpGet("department/{id}")]
     public async Task<ActionResult<List<ApplicationUserDto>>> GetUsersByDepartment(int id)
     {

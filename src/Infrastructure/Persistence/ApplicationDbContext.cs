@@ -52,7 +52,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         builder.Entity<Department>()
             .HasMany(c => c.ApplicationUsers)
             .WithOne(e => e.Department)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
 
         /*builder.Entity<Quiz>()
             .HasMany(c => c.Questions)

@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Mappings;
+﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Application.Common.Models;
@@ -14,7 +15,8 @@ public class ApplicationUserDto : IMapFrom<ApplicationUser>
 
     public string UserName { get; set; } = null!;
 
-    public int DepartmentId { get; set; }
+    public int? DepartmentId { get; set; } = null;
+    public string? DepartmentName { get; set; } = null;
 
     public IList<ResultDto> Results { get; set; }
 }

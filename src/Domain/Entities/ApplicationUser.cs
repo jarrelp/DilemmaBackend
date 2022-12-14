@@ -4,8 +4,8 @@ namespace CleanArchitecture.Domain.Entities;
 
 public class ApplicationUser : ApplicationUserDomainEvent
 {
-    public int DepartmentId { get; set; }
-    public Department Department { get; set; } = new Department();
+    public int? DepartmentId { get; set; } = null;
+    public Department? Department { get; set; } = null;
 
     public IList<Result> Results { get; set; } = new List<Result>();
 }

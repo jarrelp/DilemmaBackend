@@ -18,11 +18,13 @@ public class GetResultsByDepartmentWithPaginationQueryHandler : IRequestHandler<
 {
     private readonly IMapper _mapper;
     private readonly IIdentityService _identityService;
+    private readonly IApplicationDbContext _context;
 
-    public GetResultsByDepartmentWithPaginationQueryHandler(IMapper mapper, IIdentityService identityService)
+    public GetResultsByDepartmentWithPaginationQueryHandler(IMapper mapper, IIdentityService identityService, IApplicationDbContext context)
     {
         _mapper = mapper;
         _identityService = identityService;
+        _context = context;
     }
 
     public async Task<List<ResultDto>> Handle(GetResultsByDepartmentQuery request, CancellationToken cancellationToken)
@@ -35,16 +37,8 @@ public class GetResultsByDepartmentWithPaginationQueryHandler : IRequestHandler<
         {
             foreach (var item1 in userList)
             {
-                if (item1.Results.Any())
-                {
-                    foreach (var item2 in item1.Results)
-                    {
-                        if (item2.QuizId == request.QuizId)
-                        {
-                            results.Add(item2);
-                        }
-                    }
-                }
+                var resultList = _context.Results.Where(x => x.ApplicationUserId == item1.Id && x.QuizId == request.QuizId).Include(x => x.Answers).ToList();
+                results.AddRange(resultList);
             }
         }
 
