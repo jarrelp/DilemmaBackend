@@ -90,8 +90,7 @@ public class IdentityService : IIdentityService
     {
         var user = new ApplicationUser
         {
-            UserName = userName,
-            Email = userName,
+            UserName = userName
         };
 
         var entity = await _context.Departments
@@ -188,9 +187,17 @@ public class IdentityService : IIdentityService
 
     public async Task<(Application.Common.Models.Result Result, string UserId)> AddUserResultAsync(ApplicationUser user, Domain.Entities.Result resultModel)
     {
-        user.Results.Add(resultModel);
-        var result = await _userManager.UpdateAsync(user);
+        var entity = await GetUserAsync(user.Id);
 
-        return (result.ToApplicationResult(), user.Id);
+        if (entity == null)
+        {
+            throw new NotFoundException(nameof(ApplicationUser), user.Id);
+        }
+
+        entity.Results.Add(resultModel);
+
+        var result = await _userManager.UpdateAsync(entity);
+
+        return (result.ToApplicationResult(), entity.Id);
     }
 }

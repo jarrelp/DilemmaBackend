@@ -55,7 +55,6 @@ public class CreateResultCommandHandler : IRequestHandler<CreateResultCommand, i
         entity.Quiz = quizEntity;
         entity.ApplicationUser = userEntity;
         entity.Answers = answers;
-        
 
         var result = await _identityService.AddUserResultAsync(userEntity, entity);
 
