@@ -2,9 +2,7 @@
 using CleanArchitecture.Application.Options.Commands.CreateOption;
 using CleanArchitecture.Application.Options.Commands.DeleteOption;
 using CleanArchitecture.Application.Options.Commands.UpdateOption;
-using CleanArchitecture.Application.Options.Commands.UpdateOptionDetail;
-using CleanArchitecture.Application.Options.Queries.GetOptionDetailsWithPagination;
-using CleanArchitecture.Application.Options.Queries.GetOptionsWithPagination;
+using CleanArchitecture.Application.Options.Queries.GetOptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,13 +12,7 @@ namespace CleanArchitecture.API.Controllers;
 public class OptionsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<OptionDto>>> GetOptionsWithPagination([FromQuery] GetOptionsWithPaginationQuery query)
-    {
-        return await Mediator.Send(query);
-    }
-
-    [HttpGet("details")]
-    public async Task<ActionResult<PaginatedList<OptionDetailDto>>> GetOptionDetailsWithPagination([FromQuery] GetOptionDetailsWithPaginationQuery query)
+    public async Task<ActionResult<List<OptionDto>>> GetOptions([FromQuery] GetOptionsQuery query)
     {
         return await Mediator.Send(query);
     }
@@ -33,19 +25,6 @@ public class OptionsController : ApiControllerBase
 
     [HttpPut("{id}")]
     public async Task<ActionResult> Update(int id, UpdateOptionCommand command)
-    {
-        if (id != command.Id)
-        {
-            return BadRequest();
-        }
-
-        await Mediator.Send(command);
-
-        return NoContent();
-    }
-
-    [HttpPut("[action]")]
-    public async Task<ActionResult> UpdateOptionDetails(int id, UpdateOptionDetailCommand command)
     {
         if (id != command.Id)
         {

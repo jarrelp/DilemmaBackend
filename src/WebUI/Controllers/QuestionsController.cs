@@ -2,7 +2,7 @@
 using CleanArchitecture.Application.Questions.Commands.DeleteQuestion;
 using CleanArchitecture.Application.Questions.Commands.UpdateQuestion;
 using CleanArchitecture.Application.Questions.Commands.PurgeQuestions;
-using CleanArchitecture.Application.Questions.Queries.GetQuestionsWithPagination;
+using CleanArchitecture.Application.Questions.Queries.GetQuestions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CleanArchitecture.Application.SkillLevels.Queries.GetSkillLevels;
@@ -14,7 +14,7 @@ namespace CleanArchitecture.API.Controllers;
 public class QuestionsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<QuestionDto>>> GetQuestionsWithPagination([FromQuery] GetQuestionsWithPaginationQuery query)
+    public async Task<ActionResult<List<QuestionDto>>> GetQuestions([FromQuery] GetQuestionsQuery query)
     {
         return await Mediator.Send(query);
     }

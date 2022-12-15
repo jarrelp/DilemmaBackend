@@ -14,9 +14,10 @@ public class UpdateOptionCommandValidator : AbstractValidator<UpdateOptionComman
         _context = context;
 
         RuleFor(v => v.Description)
+            /*.when(x => !string.IsNullOrEmpty(x.Description))
             .NotNullOrEmpty()
             .NotStartWithWhiteSpace()
-            .NotEndWithWhiteSpace()
+            .NotEndWithWhiteSpace()*/
             .MaximumLength(200).WithMessage("Description must not exceed 200 characters.")
             .MustAsync(BeUniqueDescription).WithMessage("The specified description already exists.");
     }

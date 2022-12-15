@@ -50,11 +50,12 @@ public class CreateResultCommandHandler : IRequestHandler<CreateResultCommand, i
             answers.Add(_context.Options.Where(x => x.Id == item).First());
         }
 
-        var entity = new Domain.Entities.Result();
-
-        entity.Quiz = quizEntity;
-        entity.ApplicationUser = userEntity;
-        entity.Answers = answers;
+        var entity = new Domain.Entities.Result
+        {
+            Quiz = quizEntity,
+            ApplicationUser = userEntity,
+            Answers = answers
+        };
 
         var result = await _identityService.AddUserResultAsync(userEntity, entity);
 

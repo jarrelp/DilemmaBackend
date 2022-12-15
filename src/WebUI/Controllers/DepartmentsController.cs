@@ -14,7 +14,7 @@ namespace CleanArchitecture.API.Controllers;
 public class DepartmentsController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<DepartmentDto>>> GetDepartmentsWithPagination([FromQuery] GetDepartmentQuery query)
+    public async Task<ActionResult<List<DepartmentDto>>> GetDepartments([FromQuery] GetDepartmentQuery query)
     {
         return await Mediator.Send(query);
     }
