@@ -76,7 +76,7 @@ public class IdentityService : IIdentityService
 
     public async Task<List<Domain.Entities.Result>> GetUserResults(string userId)
     {
-        var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+        var user = await _userManager.Users.Include(x => x.Results).Include(x => x.Department).FirstAsync(u => u.Id == userId);
 
         var ret = new List<Domain.Entities.Result>();
         foreach(var item in user.Results)
@@ -187,7 +187,7 @@ public class IdentityService : IIdentityService
 
     public async Task<(Application.Common.Models.Result Result, string UserId)> AddUserResultAsync(ApplicationUser user, Domain.Entities.Result resultModel)
     {
-        var entity = await GetUserAsync(user.Id);
+        var entity = await _userManager.FindByIdAsync(user.Id);
 
         if (entity == null)
         {
