@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Infrastructure.Persistence;
 using CleanArchitecture.API.Filters;
 using CleanArchitecture.API.Services;
 using FluentValidation.AspNetCore;
@@ -18,9 +17,6 @@ public static class ConfigureServices
         services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
         services.AddHttpContextAccessor();
-
-        services.AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>();
 
         services.AddControllers(options =>
             options.Filters.Add<ApiExceptionFilterAttribute>())

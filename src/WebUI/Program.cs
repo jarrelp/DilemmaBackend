@@ -50,8 +50,6 @@ else
     app.UseHsts();
 }
 
-app.UseHealthChecks("/health");
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -59,7 +57,6 @@ app.UseRouting();
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();
-app.UseIdentityServer();
 app.UseAuthorization();
 
 app.MapControllers();
