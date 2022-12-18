@@ -10,22 +10,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers;
 
-//[Authorize]
+[Authorize]
 public class ResultsController : ApiControllerBase
 {
     [HttpGet]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<ResultDto>>> GetResults([FromQuery] GetResultsQuery query)
     {
         return await Mediator.Send(query);
     }
 
     [HttpGet("department")]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<ResultDto>>> GetResultsByDepartment([FromQuery] GetResultsByDepartmentQuery query)
     {
         return await Mediator.Send(query);
     }
 
     [HttpGet("user")]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<ResultDto>>> GetResultsByUser([FromQuery] GetResultsByUserQuery query)
     {
         return await Mediator.Send(query);

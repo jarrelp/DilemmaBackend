@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers;
 
-//[Authorize]
+[Authorize]
 public class SkillsController : ApiControllerBase
 {
     [HttpGet]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<SkillDto>>> GetSkills([FromQuery] GetSkillsQuery query)
     {
         return await Mediator.Send(query);

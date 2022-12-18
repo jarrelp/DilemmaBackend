@@ -2,9 +2,7 @@
 using CleanArchitecture.API.Filters;
 using CleanArchitecture.API.Services;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -27,8 +25,8 @@ public static class ConfigureServices
             options.SuppressModelStateInvalidFilter = true);
 
         services.AddEndpointsApiExplorer();
-        
-        services.AddSwaggerGen(setup =>
+
+        /*services.AddSwaggerGen(setup =>
         {
             // Include 'SecurityScheme' to use JWT Authentication
             var jwtSecurityScheme = new OpenApiSecurityScheme
@@ -53,7 +51,7 @@ public static class ConfigureServices
             {
                 { jwtSecurityScheme, Array.Empty<string>() }
             });
-        });
+        });*/
 
         return services;
     }

@@ -10,16 +10,18 @@ using CleanArchitecture.Application.Common.Models;
 
 namespace CleanArchitecture.API.Controllers;
 
-//[Authorize]
+[Authorize]
 public class QuestionsController : ApiControllerBase
 {
     [HttpGet]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<QuestionDto>>> GetQuestions([FromQuery] GetQuestionsQuery query)
     {
         return await Mediator.Send(query);
     }
 
     [HttpGet("skilllevels")]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<SkillLevelDto>>> GetSkillLevels()
     {
         return await Mediator.Send(new GetSkillLevelsQuery());

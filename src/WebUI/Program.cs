@@ -1,11 +1,26 @@
+using API;
 using CleanArchitecture.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.ConfigureResponseCaching();
+
 // Add services to the container.
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
+
+builder.Services.ConfigureControllers();
+
 builder.Services.AddAPIServices();
+
+builder.Services.ConfigureSwagger();
+builder.Services.AddSwaggerGen();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -20,7 +35,6 @@ builder.Services.AddCors(options =>
                           policy.SetIsOriginAllowed(origin => true);
                       });
 });
-
 
 var app = builder.Build();
 
@@ -50,7 +64,7 @@ else
     app.UseHsts();
 }
 
-app.UseStaticFiles();
+app.UseResponseCaching();
 
 app.UseRouting();
 

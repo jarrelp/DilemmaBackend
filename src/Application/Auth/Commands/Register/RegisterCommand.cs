@@ -10,6 +10,7 @@ public record RegisterCommand : IRequest<string>
 {
     public string UserName { get; init; } = null!;
     public string Password { get; init; } = null!;
+    public string ConfirmPassword { get; init; } = null!;
     public int DepartmentId { get; init; }
 }
 

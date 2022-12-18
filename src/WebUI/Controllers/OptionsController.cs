@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers;
 
-//[Authorize]
+[Authorize]
 public class OptionsController : ApiControllerBase
 {
     [HttpGet]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<OptionDto>>> GetOptions([FromQuery] GetOptionsQuery query)
     {
         return await Mediator.Send(query);
