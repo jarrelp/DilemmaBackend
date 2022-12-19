@@ -19,6 +19,8 @@ public interface IIdentityService
 
     Task<ApplicationUser> GetUserAsync(string userId);
 
+    Task<ApplicationUser> GetUserByUserNameAsync(string userId);
+
     Task<List<ApplicationUser>> GetAllUsersAsync();
 
     Task<List<ApplicationUser>> GetAllUsersByDepartmentAsync(int departmentId);

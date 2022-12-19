@@ -9,7 +9,7 @@ builder.Services.ConfigureResponseCaching();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddAuthentication();
+/*builder.Services.AddAuthentication();*/
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddAuthorization(options =>

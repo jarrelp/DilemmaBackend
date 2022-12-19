@@ -56,7 +56,8 @@ public static class ServiceExtention
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtConfig["ValidIssuer"],
                 ValidAudience = jwtConfig["ValidAudience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                ClockSkew = TimeSpan.Zero
             };
         });
     }

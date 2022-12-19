@@ -49,6 +49,13 @@ public class IdentityService : IIdentityService
         return user;
     }
 
+    public async Task<ApplicationUser> GetUserByUserNameAsync(string userName)
+    {
+        var user = await _userManager.Users.Include(x => x.Results).Include(x => x.Department).FirstAsync(u => u.UserName == userName);
+
+        return user;
+    }
+
     public async Task<List<ApplicationUser>> GetAllUsersAsync()
     {
         var users = await _userManager.Users.Include(x => x.Results).Include(x => x.Department).ToListAsync();

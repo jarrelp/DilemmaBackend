@@ -25,6 +25,11 @@ public class UserAuthenticationService : IUserAuthenticationService
         _configuration = configuration;
     }
 
+    public async Task<ApplicationUser> GetUser(string userName)
+    {
+        return await _userManager.FindByNameAsync(userName);
+    }
+
     public async Task<bool> ValidateUserAsync(string userName, string password)
     {
         _user = await _userManager.FindByNameAsync(userName);
@@ -75,5 +80,4 @@ public class UserAuthenticationService : IUserAuthenticationService
         );
         return tokenOptions;
     }
-
 }

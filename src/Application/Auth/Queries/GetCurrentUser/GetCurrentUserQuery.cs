@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Application.Common.Models;
@@ -9,25 +10,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Auth.Queries.GetToken;
 
-public record GetTokenQuery : IRequest<List<ApplicationUserDto>>;
+public record GetCurrentUserQuery : IRequest<ApplicationUserDto>;
 
-public class GetTokenQueryHandler : IRequestHandler<GetTokenQuery, List<ApplicationUserDto>>
+public class GetCurrentUserHandler : IRequestHandler<GetCurrentUserQuery, ApplicationUserDto>
 {
-    private readonly IIdentityService _identityService;
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly IIdentityService _identityService;
 
-    public GetTokenQueryHandler(
-        IIdentityService identityService,
+    public GetCurrentUserHandler(
         IMapper mapper,
-        IApplicationDbContext context)
+        ICurrentUserService currentUserService,
+        IIdentityService identityService)
     {
-        _identityService = identityService;
         _mapper = mapper;
-        _context = context;
+        _currentUserService = currentUserService;
+        _identityService = identityService;
     }
 
-    public async Task<List<ApplicationUserDto>> Handle(GetTokenQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationUserDto> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
     {
         /*var ret = new List<ApplicationUserDto>();
         var result = _identityService.GetAllUsersAsync().Result;
@@ -40,14 +41,24 @@ public class GetTokenQueryHandler : IRequestHandler<GetTokenQuery, List<Applicat
             .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
             .ToListAsync();*/
 
-        var ret = await _identityService.GetAllUsersAsync();
-        var ret2 = ret.ToList().AsQueryable();
-        /*foreach(var item in ret2)
+        /*var currentUserId = _currentUserService.UserId;
+        if (currentUserId == null)
         {
-            
+            throw new NotFoundException(nameof(ApplicationUser), currentUserId);
         }*/
-        return ret2
-            .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToList();
+        if (_currentUserService.UserName == null)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var user = await _identityService.GetUserByUserNameAsync(_currentUserService.UserName);
+        var retUser = new ApplicationUserDto
+        {
+            UserName = user.UserName,
+            DepartmentId = user.DepartmentId,
+            Id = user.Id
+        };
+        return retUser;
 
         /*if (request.UserId == null && request.UserName == null && request.DepartmentId == null)
         {
