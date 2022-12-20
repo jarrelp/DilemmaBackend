@@ -8,13 +8,13 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Auth.Commands.Login;
 
-public record LoginCommand : IRequest<TokenDto>
+public record LoginCommand : IRequest<AuthDto>
 {
     public string UserName { get; init; } = null!;
     public string Password { get; init; } = null!;
 }
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenDto>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthDto>
 {
     private readonly IUserAuthenticationService _userAuthenticationService;
     private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenDto>
         _mapper = mapper;
     }
 
-    public async Task<TokenDto> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<AuthDto> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _userAuthenticationService.GetUser(request.UserName);
         var retUser = new ApplicationUserDto
@@ -41,12 +41,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, TokenDto>
 
         return !await _userAuthenticationService.ValidateUserAsync(request.UserName, request.Password)
             ? throw new NotFoundException(request.UserName)
-            : new TokenDto { Token = await _userAuthenticationService.CreateTokenAsync(), User = retUser };
+            : new AuthDto { Token = await _userAuthenticationService.CreateTokenAsync(), User = retUser };
     }
-}
-
-public class TokenDto
-{
-    public string Token { get; set; } = null!;
-    public ApplicationUserDto User { get; set; } = null!;
 }

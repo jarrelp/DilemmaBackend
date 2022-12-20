@@ -7,7 +7,7 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Auth.Commands.Register;
 
-public record RegisterCommand : IRequest<ApplicationUserDto>
+public record RegisterCommand : IRequest<AuthDto>
 {
     public string UserName { get; init; } = null!;
     public string Password { get; init; } = null!;
@@ -15,18 +15,20 @@ public record RegisterCommand : IRequest<ApplicationUserDto>
     public int DepartmentId { get; init; }
 }
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApplicationUserDto>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthDto>
 {
     private readonly IIdentityService _identityService;
     private readonly IApplicationDbContext _context;
+    private readonly IUserAuthenticationService _userAuthenticationService;
 
-    public RegisterCommandHandler(IIdentityService identityService, IApplicationDbContext context)
+    public RegisterCommandHandler(IIdentityService identityService, IApplicationDbContext context, IUserAuthenticationService userAuthenticationService)
     {
         _identityService = identityService;
         _context = context;
+        _userAuthenticationService = userAuthenticationService;
     }
 
-    public async Task<ApplicationUserDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<AuthDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var departmentEntity = await _context.Departments
             .FindAsync(new object[] { request.DepartmentId }, cancellationToken);
@@ -49,6 +51,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Applicati
             Id = entity.Id
         };
 
-        return retUser;
+        return !await _userAuthenticationService.ValidateUserAsync(request.UserName, request.Password)
+            ? throw new NotFoundException(request.UserName)
+            : new AuthDto { Token = await _userAuthenticationService.CreateTokenAsync(), User = retUser };
     }
 }
