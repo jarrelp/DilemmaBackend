@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers;
 
-[Authorize]
 public class DepartmentsController : ApiControllerBase
 {
     [HttpGet]
@@ -26,6 +25,7 @@ public class DepartmentsController : ApiControllerBase
         return await Mediator.Send(command);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult> Update(int id, UpdateDepartmentCommand command)
     {
@@ -39,6 +39,7 @@ public class DepartmentsController : ApiControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
     {
@@ -47,6 +48,7 @@ public class DepartmentsController : ApiControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("multiple")]
     public async Task<ActionResult<int[]>> Delete(DeleteDepartmentsCommand command)
     {
@@ -59,6 +61,7 @@ public class DepartmentsController : ApiControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult> Purge()
     {
