@@ -5,10 +5,8 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Departments.Commands.UpdateDepartment;
 
-public record UpdateDepartmentCommand : IRequest
+public record UpdateDepartmentCommand(int Id) : IRequest
 {
-    public int Id { get; init; }
-
     public string Name { get; init; } = null!;
 }
 

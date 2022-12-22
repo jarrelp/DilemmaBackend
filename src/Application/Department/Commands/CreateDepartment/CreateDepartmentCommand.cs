@@ -1,25 +1,31 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
+﻿using AutoMapper;
+using AutoMapper.Configuration;
+using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Events.Department;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Departments.Commands.CreateDepartment;
 
-public record CreateDepartmentCommand : IRequest<int>
+public record CreateDepartmentCommand : IRequest<DepartmentDto>
 {
     public string Name { get; init; } = null!;
 }
 
-public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, int>
+public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, DepartmentDto>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CreateDepartmentCommandHandler(IApplicationDbContext context)
+    public CreateDepartmentCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<int> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<DepartmentDto> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
     {
         var entity = new Department
         {
@@ -32,6 +38,10 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return entity.Id;
+        var departmentEntity = await _context.Departments.Where(x => x.Name == request.Name).FirstOrDefaultAsync();
+
+        var result = _mapper.Map<DepartmentDto>(departmentEntity);
+
+        return result;
     }
 }

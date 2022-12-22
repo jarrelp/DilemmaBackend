@@ -20,7 +20,7 @@ public class DepartmentsController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> Create(CreateDepartmentCommand command)
+    public async Task<ActionResult<DepartmentDto>> Create(CreateDepartmentCommand command)
     {
         return await Mediator.Send(command);
     }
