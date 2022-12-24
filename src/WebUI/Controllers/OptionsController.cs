@@ -3,6 +3,7 @@ using CleanArchitecture.Application.Options.Commands.CreateOption;
 using CleanArchitecture.Application.Options.Commands.DeleteOption;
 using CleanArchitecture.Application.Options.Commands.UpdateOption;
 using CleanArchitecture.Application.Options.Queries.GetOptions;
+using CleanArchitecture.Application.Options.Queries.GetOptionsByQuestion;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,13 @@ public class OptionsController : ApiControllerBase
     [HttpGet]
     [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<OptionDto>>> GetOptions([FromQuery] GetOptionsQuery query)
+    {
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("ByDepartment")]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    public async Task<ActionResult<List<OptionDto>>> GetOptionsByDepartment([FromQuery] GetOptionsByQuestionQuery query)
     {
         return await Mediator.Send(query);
     }

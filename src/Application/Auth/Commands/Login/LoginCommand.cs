@@ -28,16 +28,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthDto>
     public async Task<AuthDto> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _userAuthenticationService.GetUser(request.UserName);
-        var retUser = new ApplicationUserDto
-        {
-            UserName = user.UserName,
-            DepartmentId= user.DepartmentId,
-            Id= user.Id
-        };
-        /*var ret = await _identityService.GetAllUsersAsync();
-        var ret2 = ret.ToList().AsQueryable();
-        return ret2
-            .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToList();*/
+        var retUser = _mapper.Map<ApplicationUserDto>(user);
 
         return !await _userAuthenticationService.ValidateUserAsync(request.UserName, request.Password)
             ? throw new NotFoundException(request.UserName)

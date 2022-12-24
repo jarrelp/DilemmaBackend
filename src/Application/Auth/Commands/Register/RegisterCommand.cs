@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
+﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
@@ -20,12 +21,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthDto>
     private readonly IIdentityService _identityService;
     private readonly IApplicationDbContext _context;
     private readonly IUserAuthenticationService _userAuthenticationService;
+    private readonly IMapper _mapper;
 
-    public RegisterCommandHandler(IIdentityService identityService, IApplicationDbContext context, IUserAuthenticationService userAuthenticationService)
+    public RegisterCommandHandler(IIdentityService identityService, IApplicationDbContext context, IUserAuthenticationService userAuthenticationService, IMapper mapper)
     {
         _identityService = identityService;
         _context = context;
         _userAuthenticationService = userAuthenticationService;
+        _mapper = mapper;
     }
 
     public async Task<AuthDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -44,12 +47,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthDto>
 
         entity.AddDomainEvent(new UserCreatedEvent(entity));
 
-        var retUser = new ApplicationUserDto
-        {
-            UserName = entity.UserName,
-            DepartmentId = entity.DepartmentId,
-            Id = entity.Id
-        };
+        var retUser = _mapper.Map<ApplicationUserDto>(entity);
 
         return !await _userAuthenticationService.ValidateUserAsync(request.UserName, request.Password)
             ? throw new NotFoundException(request.UserName)
