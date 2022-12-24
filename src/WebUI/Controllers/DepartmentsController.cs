@@ -27,16 +27,14 @@ public class DepartmentsController : ApiControllerBase
 
     [Authorize]
     [HttpPut("{id}")]
-    public async Task<ActionResult> Update(int id, UpdateDepartmentCommand command)
+    public async Task<ActionResult<DepartmentDto>> Update(int id, UpdateDepartmentCommand command)
     {
         if (id != command.Id)
         {
             return BadRequest();
         }
 
-        await Mediator.Send(command);
-
-        return NoContent();
+        return await Mediator.Send(command);
     }
 
     [Authorize]
@@ -50,7 +48,7 @@ public class DepartmentsController : ApiControllerBase
 
     [Authorize]
     [HttpDelete("multiple")]
-    public async Task<ActionResult<int[]>> Delete(DeleteDepartmentsCommand command)
+    public async Task<ActionResult> Delete(DeleteDepartmentsCommand command)
     {
         if (command.Ids.Length == 0)
         {

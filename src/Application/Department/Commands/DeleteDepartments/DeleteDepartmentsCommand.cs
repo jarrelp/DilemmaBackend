@@ -6,12 +6,12 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Departments.Commands.DeleteDepartments;
 
-public record DeleteDepartmentsCommand() : IRequest<int[]>
+public record DeleteDepartmentsCommand() : IRequest
 {
     public int[] Ids { get; init; } = null!;
 }
 
-public class DeleteDepartmentsCommandHandler : IRequestHandler<DeleteDepartmentsCommand, int[]>
+public class DeleteDepartmentsCommandHandler : IRequestHandler<DeleteDepartmentsCommand>
 {
     private readonly IApplicationDbContext _context;
 
@@ -20,7 +20,7 @@ public class DeleteDepartmentsCommandHandler : IRequestHandler<DeleteDepartments
         _context = context;
     }
 
-    public async Task<int[]> Handle(DeleteDepartmentsCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteDepartmentsCommand request, CancellationToken cancellationToken)
     {
         foreach(var item in request.Ids)
         {
@@ -39,6 +39,6 @@ public class DeleteDepartmentsCommandHandler : IRequestHandler<DeleteDepartments
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return request.Ids;
+        return Unit.Value;
     }
 }
