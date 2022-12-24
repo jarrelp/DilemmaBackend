@@ -5,17 +5,7 @@ namespace CleanArchitecture.Application.Common.Models;
 
 public class QuestionDto : IMapFrom<Question>
 {
-    public QuestionDto()
-    {
-        Options = new List<OptionDto>();
-    }
-
     public int Id { get; set; }
 
-    public int QuizId { get; set; }
-    public QuizDto QuizDto { get; set; } = null!;
-
     public string Description { get; set; } = null!;
-
-    public IList<OptionDto> Options { get; set; }
 }

@@ -6,17 +6,15 @@ namespace CleanArchitecture.Application.Common.Models;
 
 public class ApplicationUserDto : IMapFrom<ApplicationUser>
 {
-    public ApplicationUserDto()
-    {
-        Results = new List<ResultDto>();
-    }
-
     public string Id { get; set; } = null!;
 
     public string UserName { get; set; } = null!;
 
-    public int? DepartmentId { get; set; } = null;
-    public DepartmentDto? Department { get; set; } = null;
+    public string Department { get; set; } = null!;
 
-    public IList<ResultDto> Results { get; set; }
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<ApplicationUser, ApplicationUserDto>()
+            .ForMember(d => d.Department, opt => opt.MapFrom(s => s.Department.Name ?? ""));
+    }
 }

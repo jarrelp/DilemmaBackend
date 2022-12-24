@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CleanArchitecture.Application.SkillLevels.Queries.GetSkillLevels;
 using CleanArchitecture.Application.Common.Models;
+using CleanArchitecture.Application.Questions.Queries.GetQuestionsByQuiz;
 
 namespace CleanArchitecture.API.Controllers;
 
@@ -16,6 +17,13 @@ public class QuestionsController : ApiControllerBase
     [HttpGet]
     [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<QuestionDto>>> GetQuestions([FromQuery] GetQuestionsQuery query)
+    {
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("ByQuiz")]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    public async Task<ActionResult<List<QuestionDto>>> GetQuestionsByQuiz([FromQuery] GetQuestionsByQuizQuery query)
     {
         return await Mediator.Send(query);
     }
