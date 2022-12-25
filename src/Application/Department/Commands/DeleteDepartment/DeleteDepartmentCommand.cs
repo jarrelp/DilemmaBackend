@@ -6,9 +6,9 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Departments.Commands.DeleteDepartment;
 
-public record DeleteDepartmentCommand(int Id) : IRequest;
+public record DeleteDepartmentCommand(int Id) : IRequest<int>;
 
-public class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepartmentCommand>
+public class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepartmentCommand, int>
 {
     private readonly IApplicationDbContext _context;
     private readonly IIdentityService _identityService;
@@ -22,7 +22,7 @@ public class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepartmentCo
         _identityService = identityService;
     }
 
-    public async Task<Unit> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Departments
             .FindAsync(new object[] { request.Id }, cancellationToken);
@@ -37,21 +37,12 @@ public class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepartmentCo
             await _identityService.DeleteUserDepartmentAsync(item.Id);
         }
 
-        /*var allUsers = await _identityService.GetAllUsersAsync();
-        foreach (var item in allUsers)
-        {
-            if(item.DepartmentId == entity.Id)
-            {
-                await _identityService.DeleteUserDepartmentAsync(item.Id);
-            }
-        }*/
-
         _context.Departments.Remove(entity);
 
         entity.AddDomainEvent(new DepartmentDeletedEvent(entity));
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return entity.Id;
     }
 }

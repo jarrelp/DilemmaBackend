@@ -39,11 +39,9 @@ public class DepartmentsController : ApiControllerBase
 
     [Authorize]
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult<int>> Delete(int id)
     {
-        await Mediator.Send(new DeleteDepartmentCommand(id));
-
-        return NoContent();
+        return await Mediator.Send(new DeleteDepartmentCommand(id));
     }
 
     [Authorize]
