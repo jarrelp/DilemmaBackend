@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using CleanArchitecture.Application.SkillLevels.Queries.GetSkillLevels;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.Questions.Queries.GetQuestionsByQuiz;
+using CleanArchitecture.Application.Questions.Queries.GetQuestionsByActiveQuiz;
 
 namespace CleanArchitecture.API.Controllers;
 
-[Authorize]
+/*[Authorize]*/
 public class QuestionsController : ApiControllerBase
 {
     [HttpGet]
@@ -23,6 +24,13 @@ public class QuestionsController : ApiControllerBase
     [HttpGet("ByQuiz")]
     [ResponseCache(CacheProfileName = "30SecondsCaching")]
     public async Task<ActionResult<List<QuestionDto>>> GetQuestionsByQuiz([FromQuery] GetQuestionsByQuizQuery query)
+    {
+        return await Mediator.Send(query);
+    }
+
+    [HttpGet("ByActiveQuiz")]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    public async Task<ActionResult<List<ActiveQuestionDto>>> GetQuestionsByActiveQuiz([FromQuery] GetQuestionsByActiveQuizQuery query)
     {
         return await Mediator.Send(query);
     }

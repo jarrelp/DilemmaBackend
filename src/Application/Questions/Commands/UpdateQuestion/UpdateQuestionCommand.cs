@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
+﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
@@ -15,10 +16,12 @@ public record UpdateQuestionCommand : IRequest<QuestionDto>
 public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionCommand, QuestionDto>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public UpdateQuestionCommandHandler(IApplicationDbContext context)
+    public UpdateQuestionCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<QuestionDto> Handle(UpdateQuestionCommand request, CancellationToken cancellationToken)
@@ -35,6 +38,8 @@ public class UpdateQuestionCommandHandler : IRequestHandler<UpdateQuestionComman
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return entity;
+        var result = _mapper.Map<QuestionDto>(entity);
+
+        return result;
     }
 }
