@@ -1,7 +1,6 @@
 ﻿using CleanArchitecture.Application.Questions.Commands.CreateQuestion;
 using CleanArchitecture.Application.Questions.Commands.DeleteQuestion;
 using CleanArchitecture.Application.Questions.Commands.UpdateQuestion;
-using CleanArchitecture.Application.Questions.Commands.PurgeQuestions;
 using CleanArchitecture.Application.Questions.Queries.GetQuestions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,13 +35,13 @@ public class QuestionsController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> Create(CreateQuestionCommand command)
+    public async Task<ActionResult<QuestionDto>> Create(CreateQuestionCommand command)
     {
         return await Mediator.Send(command);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Update(int id, UpdateQuestionCommand command)
+    public async Task<ActionResult<QuestionDto>> Update(int id, UpdateQuestionCommand command)
     {
         if (id != command.Id)
         {
@@ -58,14 +57,6 @@ public class QuestionsController : ApiControllerBase
     public async Task<ActionResult> Delete(int id)
     {
         await Mediator.Send(new DeleteQuestionCommand(id));
-
-        return NoContent();
-    }
-
-    [HttpDelete]
-    public async Task<ActionResult> Purge()
-    {
-        await Mediator.Send(new PurgeQuestionsCommand());
 
         return NoContent();
     }

@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
+﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using CleanArchitecture.Domain.Events.Option;
@@ -6,7 +8,7 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Options.Commands.CreateOption;
 
-public record CreateOptionCommand : IRequest<int>
+public record CreateOptionCommand : IRequest<OptionDto>
 {
     public int QuestionId { get; init; }
 
@@ -15,16 +17,18 @@ public record CreateOptionCommand : IRequest<int>
     public string Description { get; init; } = null!;
 }
 
-public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, int>
+public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, OptionDto>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CreateOptionCommandHandler(IApplicationDbContext context)
+    public CreateOptionCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<int> Handle(CreateOptionCommand request, CancellationToken cancellationToken)
+    public async Task<OptionDto> Handle(CreateOptionCommand request, CancellationToken cancellationToken)
     {
         var entity = new Option
         {
@@ -53,6 +57,8 @@ public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, i
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return entity.Id;
+        var result = _mapper.Map<OptionDto>(entity);
+
+        return result;
     }
 }

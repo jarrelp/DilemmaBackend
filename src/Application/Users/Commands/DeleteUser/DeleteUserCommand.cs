@@ -6,9 +6,9 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Users.Commands.DeleteUser;
 
-public record DeleteUserCommand(string Id) : IRequest;
+public record DeleteUserCommand(string Id) : IRequest<string>;
 
-public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
+public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, string>
 {
     private readonly IIdentityService _identityService;
     private readonly IApplicationDbContext _context;
@@ -22,7 +22,7 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
         _context = context;
     }
 
-    public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         var entity = await _identityService.GetUserAsync(request.Id);
 
@@ -45,6 +45,6 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        return Unit.Value;
+        return entity.Id;
     }
 }

@@ -2,9 +2,7 @@
 using CleanArchitecture.Application.Departments.Queries.GetDepartments;
 using CleanArchitecture.Application.Departments.Commands.CreateDepartment;
 using CleanArchitecture.Application.Departments.Commands.DeleteDepartment;
-using CleanArchitecture.Application.Departments.Commands.DeleteDepartments;
 using CleanArchitecture.Application.Departments.Commands.UpdateDepartment;
-using CleanArchitecture.Application.Departments.Commands.PurgeDepartments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,27 +40,5 @@ public class DepartmentsController : ApiControllerBase
     public async Task<ActionResult<int>> Delete(int id)
     {
         return await Mediator.Send(new DeleteDepartmentCommand(id));
-    }
-
-    [Authorize]
-    [HttpDelete("multiple")]
-    public async Task<ActionResult> Delete(DeleteDepartmentsCommand command)
-    {
-        if (command.Ids.Length == 0)
-        {
-            return BadRequest();
-        }
-        await Mediator.Send(command);
-
-        return NoContent();
-    }
-
-    [Authorize]
-    [HttpDelete]
-    public async Task<ActionResult> Purge()
-    {
-        await Mediator.Send(new PurgeDepartmentsCommand());
-
-        return NoContent();
     }
 }

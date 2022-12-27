@@ -1,12 +1,14 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
+﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Events.User;
 using MediatR;
 
 namespace CleanArchitecture.Application.Users.Commands.UpdateUser;
 
-public record UpdateUserCommand : IRequest<string>
+public record UpdateUserCommand : IRequest<ApplicationUserDto>
 {
     public string Id { get; init; } = null!;
 
@@ -17,18 +19,20 @@ public record UpdateUserCommand : IRequest<string>
     public int DepartmentId { get; init; }
 }
 
-public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, string>
+public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ApplicationUserDto>
 {
     private readonly IIdentityService _identityService;
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public UpdateUserCommandHandler(IApplicationDbContext context, IIdentityService identityService)
+    public UpdateUserCommandHandler(IApplicationDbContext context, IIdentityService identityService, IMapper mapper)
     {
         _context = context;
         _identityService = identityService;
+        _mapper = mapper;
     }
 
-    public async Task<string> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationUserDto> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         var entity = await _identityService.GetUserAsync(request.Id);
 
@@ -51,6 +55,8 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, strin
 
         newEntity.AddDomainEvent(new UserCreatedEvent(newEntity));
 
-        return result.UserId;
+        var ret = _mapper.Map<ApplicationUserDto>(newEntity);
+
+        return ret;
     }
 }

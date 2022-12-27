@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Quizzes.Commands.DeleteQuiz;
 
-public record DeleteQuizCommand(int Id) : IRequest;
+public record DeleteQuizCommand(int Id) : IRequest<int>;
 
-public class DeleteQuizCommandHandler : IRequestHandler<DeleteQuizCommand>
+public class DeleteQuizCommandHandler : IRequestHandler<DeleteQuizCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -18,7 +18,7 @@ public class DeleteQuizCommandHandler : IRequestHandler<DeleteQuizCommand>
         _context = context;
     }
 
-    public async Task<Unit> Handle(DeleteQuizCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(DeleteQuizCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Quizzes
             .Where(l => l.Id == request.Id)
@@ -35,6 +35,6 @@ public class DeleteQuizCommandHandler : IRequestHandler<DeleteQuizCommand>
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return entity.Id;
     }
 }

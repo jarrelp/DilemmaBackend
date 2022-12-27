@@ -4,7 +4,6 @@ using CleanArchitecture.Application.Users.Commands.CreateUser;
 using CleanArchitecture.Application.Users.Commands.DeleteUser;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Application.Users.Commands.UpdateUser;
 using CleanArchitecture.Application.Users.Queries.GetUsersByDepartment;
 
@@ -28,13 +27,13 @@ public class UsersController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<string>> Create(CreateUserCommand command)
+    public async Task<ActionResult<ApplicationUserDto>> Create(CreateUserCommand command)
     {
         return await Mediator.Send(command);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<string>> Update(string id, UpdateUserCommand command)
+    public async Task<ActionResult<ApplicationUserDto>> Update(string id, UpdateUserCommand command)
     {
         if (id != command.Id)
         {

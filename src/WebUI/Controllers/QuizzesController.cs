@@ -1,7 +1,6 @@
 ﻿using CleanArchitecture.Application.Quizzes.Commands.CreateQuiz;
 using CleanArchitecture.Application.Quizzes.Commands.DeleteQuiz;
 using CleanArchitecture.Application.Quizzes.Commands.UpdateQuiz;
-using CleanArchitecture.Application.Quizzes.Commands.PurgeQuizzes;
 using CleanArchitecture.Application.Quizzes.Queries.GetQuizzes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +19,13 @@ public class QuizzesController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> Create(CreateQuizCommand command)
+    public async Task<ActionResult<QuizDto>> Create(CreateQuizCommand command)
     {
         return await Mediator.Send(command);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Update(int id, UpdateQuizCommand command)
+    public async Task<ActionResult<QuizDto>> Update(int id, UpdateQuizCommand command)
     {
         if (id != command.Id)
         {
@@ -42,14 +41,6 @@ public class QuizzesController : ApiControllerBase
     public async Task<ActionResult> Delete(int id)
     {
         await Mediator.Send(new DeleteQuizCommand(id));
-
-        return NoContent();
-    }
-
-    [HttpDelete]
-    public async Task<ActionResult> Purge()
-    {
-        await Mediator.Send(new PurgeQuizzesCommand());
 
         return NoContent();
     }

@@ -6,9 +6,9 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Skills.Commands.DeleteSkill;
 
-public record DeleteSkillCommand(int Id) : IRequest;
+public record DeleteSkillCommand(int Id) : IRequest<int>;
 
-public class DeleteSkillCommandHandler : IRequestHandler<DeleteSkillCommand>
+public class DeleteSkillCommandHandler : IRequestHandler<DeleteSkillCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -17,7 +17,7 @@ public class DeleteSkillCommandHandler : IRequestHandler<DeleteSkillCommand>
         _context = context;
     }
 
-    public async Task<Unit> Handle(DeleteSkillCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(DeleteSkillCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Skills
             .FindAsync(new object[] { request.Id }, cancellationToken);
@@ -33,6 +33,6 @@ public class DeleteSkillCommandHandler : IRequestHandler<DeleteSkillCommand>
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return entity.Id;
     }
 }

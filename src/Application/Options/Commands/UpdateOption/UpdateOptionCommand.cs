@@ -1,5 +1,7 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
+﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.Options.Commands.CreateOption;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
@@ -7,7 +9,7 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Options.Commands.UpdateOption;
 
-public record UpdateOptionCommand : IRequest
+public record UpdateOptionCommand : IRequest<OptionDto>
 {
     public int Id { get; init; }
 
@@ -16,16 +18,18 @@ public record UpdateOptionCommand : IRequest
     public string? Description { get; init; }
 }
 
-public class UpdateOptionCommandHandler : IRequestHandler<UpdateOptionCommand>
+public class UpdateOptionCommandHandler : IRequestHandler<UpdateOptionCommand, OptionDto>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public UpdateOptionCommandHandler(IApplicationDbContext context)
+    public UpdateOptionCommandHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<Unit> Handle(UpdateOptionCommand request, CancellationToken cancellationToken)
+    public async Task<OptionDto> Handle(UpdateOptionCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Options
             .FindAsync(new object[] { request.Id }, cancellationToken);
@@ -61,6 +65,8 @@ public class UpdateOptionCommandHandler : IRequestHandler<UpdateOptionCommand>
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        var result = _mapper.Map<OptionDto>(entity);
+
+        return result;
     }
 }

@@ -27,13 +27,13 @@ public class OptionsController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> Create(CreateOptionCommand command)
+    public async Task<ActionResult<OptionDto>> Create(CreateOptionCommand command)
     {
         return await Mediator.Send(command);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> Update(int id, UpdateOptionCommand command)
+    public async Task<ActionResult<OptionDto>> Update(int id, UpdateOptionCommand command)
     {
         if (id != command.Id)
         {

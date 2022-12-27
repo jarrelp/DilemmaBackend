@@ -6,9 +6,9 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Options.Commands.DeleteOption;
 
-public record DeleteOptionCommand(int Id) : IRequest;
+public record DeleteOptionCommand(int Id) : IRequest<int>;
 
-public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand>
+public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -17,7 +17,7 @@ public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand>
         _context = context;
     }
 
-    public async Task<Unit> Handle(DeleteOptionCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(DeleteOptionCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Options
             .FindAsync(new object[] { request.Id }, cancellationToken);
@@ -35,6 +35,6 @@ public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand>
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return entity.Id;
     }
 }

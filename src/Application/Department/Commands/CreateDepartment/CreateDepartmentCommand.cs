@@ -38,9 +38,7 @@ public class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCo
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        var departmentEntity = await _context.Departments.Where(x => x.Name == request.Name).FirstOrDefaultAsync();
-
-        var result = _mapper.Map<DepartmentDto>(departmentEntity);
+        var result = _mapper.Map<DepartmentDto>(entity);
 
         return result;
     }

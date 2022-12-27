@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
+﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Domain.Entities;
@@ -7,7 +8,7 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Results.Commands.CreateResult;
 
-public record CreateResultCommand : IRequest<int>
+public record CreateResultCommand : IRequest<ResultDto>
 {
     public int QuizId { get; set; }
 
@@ -16,18 +17,20 @@ public record CreateResultCommand : IRequest<int>
     public IList<int> AnswerIds { get; init; } = new List<int>();
 }
 
-public class CreateResultCommandHandler : IRequestHandler<CreateResultCommand, int>
+public class CreateResultCommandHandler : IRequestHandler<CreateResultCommand, ResultDto>
 {
     private readonly IApplicationDbContext _context;
     private readonly IIdentityService _identityService;
+    private readonly IMapper _mapper;
 
-    public CreateResultCommandHandler(IApplicationDbContext context, IIdentityService identityService)
+    public CreateResultCommandHandler(IApplicationDbContext context, IIdentityService identityService, IMapper mapper)
     {
         _context = context;
         _identityService = identityService;
+        _mapper = mapper;
     }
 
-    public async Task<int> Handle(CreateResultCommand request, CancellationToken cancellationToken)
+    public async Task<ResultDto> Handle(CreateResultCommand request, CancellationToken cancellationToken)
     {
         var userEntity = await _identityService.GetUserAsync(request.ApplicationUserId);
 
@@ -57,9 +60,9 @@ public class CreateResultCommandHandler : IRequestHandler<CreateResultCommand, i
             Answers = answers
         };
 
-        var result = await _identityService.AddUserResultAsync(userEntity, entity);
+        var resultEntity = await _identityService.AddUserResultAsync(userEntity, entity);
 
-        if(!result.Result.Succeeded)
+        if(!resultEntity.Result.Succeeded)
         {
             throw new NotFoundException();
         }
@@ -70,6 +73,8 @@ public class CreateResultCommandHandler : IRequestHandler<CreateResultCommand, i
 
         await _context.SaveChangesAsync(cancellationToken);*/
 
-        return entity.QuizId;
+        var result = _mapper.Map<ResultDto>(entity);
+
+        return result;
     }
 }
