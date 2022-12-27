@@ -48,16 +48,12 @@ public class QuestionsController : ApiControllerBase
             return BadRequest();
         }
 
-        await Mediator.Send(command);
-
-        return NoContent();
+        return await Mediator.Send(command);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult<int>> Delete(int id)
     {
-        await Mediator.Send(new DeleteQuestionCommand(id));
-
-        return NoContent();
+        return await Mediator.Send(new DeleteQuestionCommand(id));
     }
 }

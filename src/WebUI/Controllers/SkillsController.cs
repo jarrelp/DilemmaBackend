@@ -5,6 +5,7 @@ using CleanArchitecture.Application.Skills.Commands.DeleteSkill;
 using CleanArchitecture.Application.Skills.Commands.UpdateSkill;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CleanArchitecture.Application.Departments.Commands.DeleteDepartment;
 
 namespace CleanArchitecture.API.Controllers;
 
@@ -32,16 +33,12 @@ public class SkillsController : ApiControllerBase
             return BadRequest();
         }
 
-        await Mediator.Send(command);
-
-        return NoContent();
+        return await Mediator.Send(command);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult<int>> Delete(int id)
     {
-        await Mediator.Send(new DeleteSkillCommand(id));
-
-        return NoContent();
+        return await Mediator.Send(new DeleteSkillCommand(id));
     }
 }

@@ -44,10 +44,8 @@ public class UsersController : ApiControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(string id)
+    public async Task<ActionResult<string>> Delete(string id)
     {
-        await Mediator.Send(new DeleteUserCommand(id));
-
-        return NoContent();
+        return await Mediator.Send(new DeleteUserCommand(id));
     }
 }
