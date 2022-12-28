@@ -21,11 +21,11 @@ public class QuestionsController : ApiControllerBase
         return await Mediator.Send(query);
     }
 
-    [HttpGet("ByQuiz")]
+    [HttpGet("ByQuiz/{id}")]
     [ResponseCache(CacheProfileName = "30SecondsCaching")]
-    public async Task<ActionResult<List<QuestionDto>>> GetQuestionsByQuiz([FromQuery] GetQuestionsByQuizQuery query)
+    public async Task<ActionResult<List<QuestionDto>>> GetQuestionsByQuiz(int id)
     {
-        return await Mediator.Send(query);
+        return await Mediator.Send(new GetQuestionsByQuizQuery(id));
     }
 
     [HttpGet("ByActiveQuiz")]

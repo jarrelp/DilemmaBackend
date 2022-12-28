@@ -8,10 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Questions.Queries.GetQuestionsByQuiz;
 
-public record GetQuestionsByQuizQuery : IRequest<List<QuestionDto>>
-{
-    public int QuizId { get; init; }
-}
+public record GetQuestionsByQuizQuery(int Id) : IRequest<List<QuestionDto>>;
 
 public class GetQuestionsByQuizQueryHandler : IRequestHandler<GetQuestionsByQuizQuery, List<QuestionDto>>
 {
@@ -27,7 +24,7 @@ public class GetQuestionsByQuizQueryHandler : IRequestHandler<GetQuestionsByQuiz
     public async Task<List<QuestionDto>> Handle(GetQuestionsByQuizQuery request, CancellationToken cancellationToken)
     {
         return await _context.Questions
-            .Where(x => x.QuizId == request.QuizId)
+            .Where(x => x.QuizId == request.Id)
             .ProjectTo<QuestionDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
