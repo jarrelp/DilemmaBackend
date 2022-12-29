@@ -13,7 +13,7 @@ namespace CleanArchitecture.API.Controllers;
 public class SkillsController : ApiControllerBase
 {
     [HttpGet]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<SkillDto>>> GetSkills([FromQuery] GetSkillsQuery query)
     {
         return await Mediator.Send(query);

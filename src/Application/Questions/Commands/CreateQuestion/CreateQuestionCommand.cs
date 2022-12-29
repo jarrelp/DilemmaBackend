@@ -7,9 +7,9 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Questions.Commands.CreateQuestion;
 
-public record CreateQuestionCommand : IRequest<QuestionDto>
+public record CreateQuestionCommand() : IRequest<QuestionDto>
 {
-    public int QuizId { get; set; }
+    public int QuizId { get; init; }
     public string Description { get; init; } = null!;
 }
 
@@ -26,10 +26,11 @@ public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionComman
 
     public async Task<QuestionDto> Handle(CreateQuestionCommand request, CancellationToken cancellationToken)
     {
-        var entity = new Question();
-
-        entity.QuizId = request.QuizId;
-        entity.Description = request.Description;
+        var entity = new Question
+        {
+            QuizId = request.QuizId,
+            Description = request.Description
+        };
 
         entity.AddDomainEvent(new QuestionCreatedEvent(entity));
 

@@ -12,7 +12,7 @@ namespace CleanArchitecture.API.Controllers;
 public class QuizzesController : ApiControllerBase
 {
     [HttpGet]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<QuizDto>>> GetQuizzes([FromQuery] GetQuizzesQuery query)
     {
         return await Mediator.Send(query);

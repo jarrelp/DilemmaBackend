@@ -136,7 +136,7 @@ public class ApplicationDbContextInitialiser
             _context.Questions.Add(question1);
 
             //quiz
-            var quiz1 = new Quiz { Description = "Question", Active = true, Questions = new List<Question>() { question1 } };
+            var quiz1 = new Quiz { Description = "Quiz", Active = true, Questions = new List<Question>() { question1 } };
             _context.Quizzes.Add(quiz1);
 
             //result

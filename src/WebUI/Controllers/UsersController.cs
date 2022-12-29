@@ -13,14 +13,14 @@ namespace CleanArchitecture.API.Controllers;
 public class UsersController : ApiControllerBase
 {
     [HttpGet]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<ApplicationUserDto>>> GetUsers([FromQuery] GetUsersQuery query)
     {
         return await Mediator.Send(query);
     }
 
     [HttpGet("department/{id}")]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<ApplicationUserDto>>> GetUsersByDepartment(int id)
     {
         return await Mediator.Send(new GetUsersByDepartmentQuery(id));

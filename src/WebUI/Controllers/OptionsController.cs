@@ -13,21 +13,21 @@ namespace CleanArchitecture.API.Controllers;
 public class OptionsController : ApiControllerBase
 {
     [HttpGet]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<OptionDto>>> GetOptions([FromQuery] GetOptionsQuery query)
     {
         return await Mediator.Send(query);
     }
 
     [HttpGet("ByQuestion/{id}")]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<OptionDto>>> GetOptionsByDepartment(int id)
     {
         return await Mediator.Send(new GetOptionsByQuestionQuery(id));
     }
 
     [HttpGet("ByDepartment")]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<OptionDto>>> GetOptionsByDepartment([FromQuery] GetOptionsByQuestionQuery query)
     {
         return await Mediator.Send(query);
@@ -53,10 +53,8 @@ public class OptionsController : ApiControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult<int>> Delete(int id)
     {
-        await Mediator.Send(new DeleteOptionCommand(id));
-
-        return NoContent();
+        return await Mediator.Send(new DeleteOptionCommand(id));
     }
 }

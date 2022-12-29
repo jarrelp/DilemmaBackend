@@ -11,7 +11,7 @@ namespace CleanArchitecture.API.Controllers;
 public class DepartmentsController : ApiControllerBase
 {
     [HttpGet]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<DepartmentDto>>> GetDepartments([FromQuery] GetDepartmentQuery query)
     {
         return await Mediator.Send(query);

@@ -15,28 +15,28 @@ namespace CleanArchitecture.API.Controllers;
 public class QuestionsController : ApiControllerBase
 {
     [HttpGet]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<QuestionDto>>> GetQuestions([FromQuery] GetQuestionsQuery query)
     {
         return await Mediator.Send(query);
     }
 
     [HttpGet("ByQuiz/{id}")]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<QuestionDto>>> GetQuestionsByQuiz(int id)
     {
         return await Mediator.Send(new GetQuestionsByQuizQuery(id));
     }
 
     [HttpGet("ByActiveQuiz")]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<ActiveQuestionDto>>> GetQuestionsByActiveQuiz([FromQuery] GetQuestionsByActiveQuizQuery query)
     {
         return await Mediator.Send(query);
     }
 
     [HttpGet("skilllevels")]
-    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
     public async Task<ActionResult<List<SkillLevelDto>>> GetSkillLevels()
     {
         return await Mediator.Send(new GetSkillLevelsQuery());
