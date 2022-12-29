@@ -31,6 +31,10 @@ public class DeleteQuizCommandHandler : IRequestHandler<DeleteQuizCommand, int>
 
         _context.Quizzes.Remove(entity);
 
+        var questions = _context.Questions.Where(x => x.QuizId == entity.Id).ToList();
+
+        _context.Questions.RemoveRange(questions);
+
         entity.AddDomainEvent(new QuizDeletedEvent(entity));
 
         await _context.SaveChangesAsync(cancellationToken);

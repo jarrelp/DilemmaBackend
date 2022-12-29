@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers;
 
-[Authorize]
+/*[Authorize]*/
 public class OptionsController : ApiControllerBase
 {
     [HttpGet]
@@ -17,6 +17,13 @@ public class OptionsController : ApiControllerBase
     public async Task<ActionResult<List<OptionDto>>> GetOptions([FromQuery] GetOptionsQuery query)
     {
         return await Mediator.Send(query);
+    }
+
+    [HttpGet("ByQuestion/{id}")]
+    [ResponseCache(CacheProfileName = "30SecondsCaching")]
+    public async Task<ActionResult<List<OptionDto>>> GetOptionsByDepartment(int id)
+    {
+        return await Mediator.Send(new GetOptionsByQuestionQuery(id));
     }
 
     [HttpGet("ByDepartment")]
@@ -40,12 +47,16 @@ public class OptionsController : ApiControllerBase
             return BadRequest();
         }
 
-        return await Mediator.Send(command);
+        await Mediator.Send(command);
+
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<int>> Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        return await Mediator.Send(new DeleteOptionCommand(id));
+        await Mediator.Send(new DeleteOptionCommand(id));
+
+        return NoContent();
     }
 }

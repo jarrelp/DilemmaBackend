@@ -8,10 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Options.Queries.GetOptionsByQuestion;
 
-public record GetOptionsByQuestionQuery : IRequest<List<OptionDto>>
-{
-    public int QuestionId { get; init; }
-}
+public record GetOptionsByQuestionQuery(int Id) : IRequest<List<OptionDto>>;
 
 public class GetOptionsByQuestionQueryHandler : IRequestHandler<GetOptionsByQuestionQuery, List<OptionDto>>
 {
@@ -27,7 +24,7 @@ public class GetOptionsByQuestionQueryHandler : IRequestHandler<GetOptionsByQues
     public async Task<List<OptionDto>> Handle(GetOptionsByQuestionQuery request, CancellationToken cancellationToken)
     {
         return await _context.Options
-            .Where(x => x.QuestionId == request.QuestionId)
+            .Where(x => x.QuestionId == request.Id)
             .ProjectTo<OptionDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }

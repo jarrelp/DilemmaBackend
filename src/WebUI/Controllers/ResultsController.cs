@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers;
 
-[Authorize]
+/*[Authorize]*/
 public class ResultsController : ApiControllerBase
 {
     [HttpGet]

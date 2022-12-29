@@ -9,7 +9,7 @@ using CleanArchitecture.Application.Users.Queries.GetUsersByDepartment;
 
 namespace CleanArchitecture.API.Controllers;
 
-[Authorize]
+/*[Authorize]*/
 public class UsersController : ApiControllerBase
 {
     [HttpGet]

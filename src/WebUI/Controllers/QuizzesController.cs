@@ -8,7 +8,7 @@ using CleanArchitecture.Application.Common.Models;
 
 namespace CleanArchitecture.API.Controllers;
 
-[Authorize]
+/*[Authorize]*/
 public class QuizzesController : ApiControllerBase
 {
     [HttpGet]

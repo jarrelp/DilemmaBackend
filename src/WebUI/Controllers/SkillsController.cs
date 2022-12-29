@@ -9,7 +9,7 @@ using CleanArchitecture.Application.Departments.Commands.DeleteDepartment;
 
 namespace CleanArchitecture.API.Controllers;
 
-[Authorize]
+/*[Authorize]*/
 public class SkillsController : ApiControllerBase
 {
     [HttpGet]
