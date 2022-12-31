@@ -21,7 +21,7 @@ public class OptionSkillsController : ApiControllerBase
 
     [HttpGet("ByOption/{id}")]
     /*[ResponseCache(CacheProfileName = "30SecondsCaching")]*/
-    public async Task<ActionResult<List<OptionSkillDto>>> GetOptionSkillsByOption(string id)
+    public async Task<ActionResult<List<OptionSkillDto>>> GetOptionSkillsByOption(int id)
     {
         return await Mediator.Send(new GetOptionSkillsByOptionQuery(id));
     }
